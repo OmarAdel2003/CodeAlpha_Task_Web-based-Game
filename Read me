@@ -1,3 +1,38 @@
 Hello there,
 To whoever reading this file from codealpha this code incudles all given features expect the multiplayer support. I tried to add it but I have faced diffuclts with the code to get it to work. So, that's why I cound't add it to the code.
 Thank you.
+
+However here is the function I tired to implement for the that part:
+// Server-side code (Node.js)
+
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({ port: 8080 });
+
+wss.on('connection', function connection(ws) {
+  ws.on('message', function incoming(data) {
+    // Broadcast incoming message to all clients
+    wss.clients.forEach(function each(client) {
+      if (client !== ws && client.readyState === WebSocket.OPEN) {
+        client.send(data);
+      }
+    });
+  });
+});
+
+// Client-side code (JavaScript)
+
+const ws = new WebSocket('ws://localhost:8080');
+
+ws.onopen = function() {
+  console.log('Connected to WebSocket server');
+};
+
+ws.onmessage = function(event) {
+  const data = JSON.parse(event.data);
+  // Handle incoming messages from the server
+};
+
+// Send player actions to the server
+function sendPlayerAction(action) {
+  ws.send(JSON.stringify(action));
+}
